@@ -25,6 +25,7 @@ export class AvaliacoesComponent {
 
   avaliacoes: Avaliacao[] = [];
   livros: Livro[] = [];
+  notas = [1, 2, 3, 4, 5]
   value: Avaliacao = new Avaliacao();
   popupDeleteVisivel: boolean = false;
   apenasDigitosPattern = /^[\d.,]+$/;
