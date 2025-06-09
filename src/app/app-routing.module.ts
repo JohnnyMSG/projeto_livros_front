@@ -24,72 +24,58 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'livros',
     component: LivrosComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'autores',
     component: AutoresComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'avaliacoes',
     component: AvaliacoesComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'localizacao',
     component: LocalizacaoComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'fornecedores',
     component: FornecedoresComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'produtos',
     component: ProdutosComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'notas',
     component: NotasComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'itensNota',
     component: ItensNotaComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'home',
     component: HomeComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'login-form',
     component: LoginFormComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'reset-password',
     component: ResetPasswordFormComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'create-account',
     component: CreateAccountFormComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'change-password/:recoveryCode',
     component: ChangePasswordFormComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: '**',
