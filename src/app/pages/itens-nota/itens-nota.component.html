@@ -1,0 +1,94 @@
+<div class="content-block">
+  <h2>Item Nota</h2>
+
+  <!-- LISTAGEM -->
+  <dx-data-grid
+    #dataGrip
+    [dataSource]="itensNotas"
+    [showRowLines]="true"
+    [showBorders]="true"
+    (onSaved)="onSavedItensNota($event)"
+    (onRowRemoving)="popupConfirmacaoDelete($event)"
+  >
+
+    <dxi-column dataField="id"></dxi-column>
+    <dxi-column dataField="quantidade"></dxi-column>
+    <dxi-column dataField="numeroNota">
+      <dxo-lookup [dataSource]="notas" displayExpr="numero" valueExpr="numero"></dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="nomeProduto">
+      <dxo-lookup [dataSource]="produtos" displayExpr="nome" valueExpr="nome"></dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="valor_total"></dxi-column>
+
+
+    <!-- CONFIGURAÇÕES DA LISTA (ADIÇÃO, EDIÇÃO E REMOÇÃO) -->
+    <dxo-editing
+      mode="popup"
+      [allowUpdating]="true"
+      [allowDeleting]="true"
+      [confirmDelete]="false"
+      [texts]="{
+      saveRowChanges: 'Salvar',
+      cancelRowChanges: 'Cancelar'
+    }">
+
+      <dxo-popup title="Informações Itens Nota" [showTitle]="true" width="60%" height="75%"></dxo-popup>
+      <dxo-form [colCount]="1">
+        <!-- ID -->
+        <dxi-item dataField="id" [disabled]="true" [editorOptions]="{ readOnly: true }"></dxi-item>
+        <!-- QUANTIDADE -->
+        <dxi-item dataField="quantidade" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Quantidade é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+        <!-- NOTA -->
+        <dxi-item dataField="numeroNota">
+          <dxi-validation-rule type="required" message="Nota é obrigatória"></dxi-validation-rule>
+        </dxi-item>
+        <!-- PRODUTO -->
+        <dxi-item dataField="nomeProduto">
+          <dxi-validation-rule type="required" message="Produto é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+      </dxo-form>
+
+    </dxo-editing>
+
+    <!-- OPÇÕES DAS PÁGINAS DA LISTA -->
+    <dxo-scrolling mode="standard"></dxo-scrolling>
+    <dxo-paging [enabled]="true" [pageSize]="5"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[5, 10, 20]"
+      [showInfo]="false"
+    ></dxo-pager>
+
+    <!-- PESQUISA E FILTRO -->
+    <dxo-search-panel [visible]="true" width="300"></dxo-search-panel>
+    <dxo-header-filter [visible]="false"></dxo-header-filter>
+
+  </dx-data-grid>
+
+  <!-- BOTÃO ADICIONAR -->
+  <dx-speed-dial-action
+    icon="add"
+    label="Adicionar"
+    (onClick)="addRow()"
+  ></dx-speed-dial-action>
+</div>
+
+<!-- POPUP CONFIRMAÇÃO DELETE -->
+<dx-popup
+  [visible]="popupDeleteVisivel"
+  [width]="500"
+  [height]="170"
+  [showTitle]="false"
+>
+  <p style="font-size: 18px">Você tem certeza que deseja excluir este item?</p>
+  <br>
+
+  <!-- BOTÕES DE CONFIRMAÇÃO E CANCELAMENTO -->
+  <div style="display: flex; justify-content: flex-end">
+    <dx-button text="Cancelar" (onClick)="cancelarDelete()"></dx-button>
+    <dx-button text="Deletar" type="default" (onClick)="onPressDeletar()"></dx-button>
+  </div>
+</dx-popup>

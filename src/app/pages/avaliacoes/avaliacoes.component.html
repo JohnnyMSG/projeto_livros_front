@@ -1,0 +1,121 @@
+<div class="content-block">
+  <h2>Avaliações</h2>
+
+  <!-- LISTAGEM -->
+  <dx-data-grid
+    #dataGrip
+    [dataSource]="avaliacoes"
+    [showRowLines]="true"
+    [showBorders]="true"
+    (onSaved)="onSavedAvaliacao($event)"
+    (onRowRemoving)="popupConfirmacaoDelete($event)"
+  >
+
+    <!-- CONFIGURAÇÕES DA LISTA (ADIÇÃO, EDIÇÃO E REMOÇÃO) -->
+    <dxo-editing
+      mode="popup"
+      [allowUpdating]="true"
+      [allowDeleting]="true"
+      [confirmDelete]="false"
+      [texts]="{
+      saveRowChanges: 'Salvar',
+      cancelRowChanges: 'Cancelar'
+    }">
+
+      <dxo-popup title="Adicionar Avaliação" [showTitle]="true" width="60%" height="75%"></dxo-popup>
+      <dxo-form [colCount]="1">
+
+        <!-- ID -->
+        <dxi-item dataField="id" [disabled]="true" [visible]="false" [editorOptions]="{ readOnly: true }"></dxi-item>
+
+        <!-- TITULO LIVRO -->
+        <dxi-item dataField="livroTitulo" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Título do livro é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- NOTA -->
+        <dxi-item dataField="nota" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Nota do livro é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- TITULO -->
+        <dxi-item dataField="titulo" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Titulo é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- COMENTARIO -->
+        <dxi-item dataField="comentario" [height]="700" [editorType]="'dxTextArea'" [editorOptions]="{ height: 150, maxLength: 250 }">
+          <dxi-validation-rule type="required" message="Comentário é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+      </dxo-form>
+
+    </dxo-editing>
+
+    <!-- COLUNAS DA LISTA -->
+    <dxi-column dataField="id" width="5%" alignment="center"></dxi-column>
+    <dxi-column dataField="livroTitulo" width="20%">
+      <dxo-lookup [dataSource]="livros" displayExpr="titulo" valueExpr="titulo"></dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="nota" width="5%" alignment="center"></dxi-column>
+    <dxi-column dataField="titulo" width="15%"></dxi-column>
+    <dxi-column dataField="comentario"></dxi-column>
+
+    <!-- OPÇÕES DAS PÁGINAS DA LISTA -->
+    <dxo-scrolling mode="standard"></dxo-scrolling>
+    <dxo-paging [enabled]="true" [pageSize]="5"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[5, 10, 20]"
+      [showInfo]="false"
+    ></dxo-pager>
+
+    <!-- PESQUISA E FILTRO -->
+    <dxo-search-panel [visible]="true" width="300"></dxo-search-panel>
+    <dxo-header-filter [visible]="false"></dxo-header-filter>
+
+  </dx-data-grid>
+
+  <!-- BOTÃO ADICIONAR -->
+  <dx-speed-dial-action
+    icon="add"
+    label="Adicionar"
+    (onClick)="addRow()"
+  ></dx-speed-dial-action>
+</div>
+
+<!-- POPUP CONFIRMAÇÃO DELETE -->
+<dx-popup
+  [visible]="popupDeleteVisivel"
+  [width]="500"
+  [height]="170"
+  [showTitle]="false"
+>
+  <p style="font-size: 18px">Você tem certeza que deseja excluir este item?</p>
+  <br>
+
+  <!-- BOTÕES DE CONFIRMAÇÃO E CANCELAMENTO -->
+  <div style="display: flex; justify-content: flex-end">
+    <dx-button text="Cancelar" (onClick)="cancelarDelete()"></dx-button>
+    <dx-button text="Deletar" type="default" (onClick)="onPressDeletar()"></dx-button>
+  </div>
+</dx-popup>
+
+<!-- POPUP AVISO FORNECEDOR VINCULADO A NOTA -->
+<dx-popup
+  [visible]="livroComAutorExistente"
+  [width]="500"
+  [height]="250"
+  [showTitle]="true"
+  title="AVISO"
+>
+  <p style="font-size: 18px">A exclusão deste autor não é permitida, pois há um livro vinculada a ele.</p>
+  <br>
+
+  <!-- BOTÃO OK -->
+  <div style="display: flex; justify-content: flex-end">
+    <dx-button text="Entendido" type="default" (onClick)="livroComAutorExistente = false"></dx-button>
+  </div>
+</dx-popup>
+
+

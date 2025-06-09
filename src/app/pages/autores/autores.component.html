@@ -1,0 +1,112 @@
+<div class="content-block">
+  <h2>Autores</h2>
+
+  <!-- LISTAGEM -->
+  <dx-data-grid
+    #dataGrip
+    [dataSource]="autores"
+    [showRowLines]="true"
+    [showBorders]="true"
+    (onSaved)="onSavedAutor($event)"
+    (onRowRemoving)="popupConfirmacaoDelete($event)"
+  >
+
+    <!-- COLUNAS DA LISTA -->
+    <dxi-column dataField="id" width="5%" alignment="center"></dxi-column>
+    <dxi-column dataField="nome" width="30%"></dxi-column>
+    <dxi-column dataField="idade" width="5%" alignment="center"></dxi-column>
+    <dxi-column dataField="biografia"></dxi-column>
+
+    <!-- CONFIGURAÇÕES DA LISTA (ADIÇÃO, EDIÇÃO E REMOÇÃO) -->
+    <dxo-editing
+      mode="popup"
+      [allowUpdating]="true"
+      [allowDeleting]="true"
+      [confirmDelete]="false"
+      [texts]="{
+      saveRowChanges: 'Salvar',
+      cancelRowChanges: 'Cancelar'
+    }">
+
+      <dxo-popup title="Adicionar Autor" [showTitle]="true" width="60%" height="75%"></dxo-popup>
+      <dxo-form [colCount]="1">
+
+        <!-- ID -->
+        <dxi-item dataField="id" [disabled]="true" [visible]="false" [editorOptions]="{ readOnly: true }"></dxi-item>
+
+        <!-- NOME -->
+        <dxi-item dataField="nome" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Nome é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- IDADE -->
+        <dxi-item dataField="idade" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Idade do Autor é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- BIOGRAFIA -->
+        <dxi-item dataField="biografia" [height]="700" [editorType]="'dxTextArea'" [editorOptions]="{ height: 150, maxLength: 250 }">
+          <dxi-validation-rule type="required" message="Biografia é obrigatória"></dxi-validation-rule>
+        </dxi-item>
+      </dxo-form>
+
+    </dxo-editing>
+
+    <!-- OPÇÕES DAS PÁGINAS DA LISTA -->
+    <dxo-scrolling mode="standard"></dxo-scrolling>
+    <dxo-paging [enabled]="true" [pageSize]="5"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[5, 10, 20]"
+      [showInfo]="false"
+    ></dxo-pager>
+
+    <!-- PESQUISA E FILTRO -->
+    <dxo-search-panel [visible]="true" width="300"></dxo-search-panel>
+    <dxo-header-filter [visible]="false"></dxo-header-filter>
+
+  </dx-data-grid>
+
+  <!-- BOTÃO ADICIONAR -->
+  <dx-speed-dial-action
+    icon="add"
+    label="Adicionar"
+    (onClick)="addRow()"
+  ></dx-speed-dial-action>
+</div>
+
+<!-- POPUP CONFIRMAÇÃO DELETE -->
+<dx-popup
+  [visible]="popupDeleteVisivel"
+  [width]="500"
+  [height]="170"
+  [showTitle]="false"
+>
+  <p style="font-size: 18px">Você tem certeza que deseja excluir este item?</p>
+  <br>
+
+  <!-- BOTÕES DE CONFIRMAÇÃO E CANCELAMENTO -->
+  <div style="display: flex; justify-content: flex-end">
+    <dx-button text="Cancelar" (onClick)="cancelarDelete()"></dx-button>
+    <dx-button text="Deletar" type="default" (onClick)="onPressDeletar()"></dx-button>
+  </div>
+</dx-popup>
+
+<!-- POPUP AVISO FORNECEDOR VINCULADO A NOTA -->
+<dx-popup
+  [visible]="livroComAutorExistente"
+  [width]="500"
+  [height]="250"
+  [showTitle]="true"
+  title="AVISO"
+>
+  <p style="font-size: 18px">A exclusão deste autor não é permitida, pois há um livro vinculada a ele.</p>
+  <br>
+
+  <!-- BOTÃO OK -->
+  <div style="display: flex; justify-content: flex-end">
+    <dx-button text="Entendido" type="default" (onClick)="livroComAutorExistente = false"></dx-button>
+  </div>
+</dx-popup>
+
+

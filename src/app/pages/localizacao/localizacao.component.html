@@ -1,0 +1,18 @@
+<div class="content-block">
+    <h2>Localização</h2>
+
+    <state-city
+        [(estadoSelecionado)]="teste"
+        [(cidadeSelecionada)]="cidadeSelecionada"
+        siglaEstadoInicial="MG"
+        nomeCidadeInicial="Uberlândia"
+    ></state-city>
+    <br>
+
+    <p>
+        Estado selecionado: {{ teste.sigla + ' - ' + teste.nome }}
+    </p>
+    <p>
+        Cidade selecionada: {{ cidadeSelecionada.nome }}
+    </p>
+</div>

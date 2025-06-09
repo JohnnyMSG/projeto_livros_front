@@ -1,0 +1,117 @@
+<div class="content-block">
+  <h2>Notas</h2>
+
+  <!-- LISTAGEM -->
+  <dx-data-grid
+    #dataGrip
+    [dataSource]="notas"
+    [showRowLines]="true"
+    [showBorders]="true"
+    (onSaved)="onSavedNota($event)"
+    (onRowRemoving)="popupConfirmacaoDelete($event)"
+  >
+
+    <!-- CONFIGURAÇÕES DA LISTA (ADIÇÃO, EDIÇÃO E REMOÇÃO) -->
+    <dxo-editing
+      mode="popup"
+      [allowUpdating]="true"
+      [allowDeleting]="true"
+      [confirmDelete]="false"
+      [texts]="{
+      saveRowChanges: 'Salvar',
+      cancelRowChanges: 'Cancelar'
+    }">
+
+      <dxo-popup title="Informações notas" [showTitle]="true" width="80%" height="75%"></dxo-popup>
+      <dxo-form>
+        <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+          <dxi-item dataField="id" [disabled]="true" [editorOptions]="{ readOnly: true }"></dxi-item>
+          <dxi-item dataField="data" [disabled]="true" [editorOptions]="{ readOnly: true }"></dxi-item>
+          <dxi-item dataField="numero" [editorOptions]="editorOptions">
+            <dxi-validation-rule type="required" message="Número é obrigatório"></dxi-validation-rule>
+            <dxi-validation-rule type="pattern" [pattern]="apenasDigitosPattern"
+                                 message="Apenas dígitos são permitidos"></dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="nomeFornecedor" [editorOptions]="editorOptions">
+            <dxi-validation-rule type="required" message="Fornecedor é obrigatório"></dxi-validation-rule>
+          </dxi-item>
+          <dxi-item dataField="itens"></dxi-item>
+        </dxi-item>
+      </dxo-form>
+
+    </dxo-editing>
+
+    <!-- COLUNAS DA LISTA -->
+    <dxi-column dataField="id"></dxi-column>
+    <dxi-column dataField="numero"></dxi-column>
+    <dxi-column dataField="nomeFornecedor">
+      <dxo-lookup [dataSource]="fornecedores" displayExpr="nome" valueExpr="nome"></dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="data" dataType="date"></dxi-column>
+    <dxi-column dataField="itens" [visible]="false" editCellTemplate="editCellTemplateItens"></dxi-column>
+
+    <div *dxTemplate="let data of 'editCellTemplateItens'">
+      <dx-data-grid
+        [(dataSource)]="data.value"
+        [showRowLines]="true"
+        [showBorders]="true"
+        (onSaved)="onSavedItemNota($event)"
+        (onRowRemoving)="deletarItemNota($event)"
+      >
+        <dxo-editing
+          mode="row"
+          [allowUpdating]="true"
+          [allowDeleting]="true"
+          [confirmDelete]="false"
+          [texts]="{saveRowChanges: 'Salvar', cancelRowChanges: 'Cancelar'}">
+          <dxo-form>
+            <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+              <dxi-item dataField="id" [disabled]="true" [editorOptions]="{ readOnly: true }"></dxi-item>
+            </dxi-item>
+          </dxo-form>
+        </dxo-editing>
+      </dx-data-grid>
+    </div>
+
+    <!-- OPÇÕES DAS PÁGINAS DA LISTA -->
+    <dxo-scrolling mode="standard"></dxo-scrolling>
+    <dxo-paging [enabled]="true" [pageSize]="5"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[5, 10, 20]"
+      [showInfo]="false"
+    ></dxo-pager>
+
+    <!-- PESQUISA E FILTRO -->
+    <dxo-search-panel [visible]="true" width="300"></dxo-search-panel>
+    <dxo-header-filter [visible]="false"></dxo-header-filter>
+
+  </dx-data-grid>
+
+  <!-- BOTÃO ADICIONAR -->
+  <dx-speed-dial-action
+    icon="add"
+    label="Adicionar"
+    (onClick)="addRow()"
+  ></dx-speed-dial-action>
+</div>
+
+<!-- POPUP CONFIRMAÇÃO DELETE -->
+<dx-popup
+  [visible]="popupDeleteVisivel"
+  [width]="500"
+  [height]="230"
+  [showTitle]="false"
+>
+  <p style="font-size: 18px">Você tem certeza que deseja excluir este item?</p>
+  <p style="font-size: 18px; border: 2px solid red; background-color: #fb8589; color: #a50e1e; padding: 10px; border-radius: 5px;">
+    Você excluirá os itens dessa nota também!
+  </p>
+  <br>
+
+  <!-- BOTÕES DE CONFIRMAÇÃO E CANCELAMENTO -->
+  <div style="display: flex; justify-content: flex-end">
+    <dx-button text="Cancelar" (onClick)="cancelarDelete()"></dx-button>
+    <dx-button text="Deletar" type="default" (onClick)="onPressDeletar()"></dx-button>
+  </div>
+</dx-popup>

@@ -1,0 +1,25 @@
+<div style="margin-left: 5%;">
+    <p>Estados</p>
+    <dx-select-box
+        width="50%"
+        [dataSource]="estados"
+        [value]="idEstadoInicial"
+        [displayExpr]="textFormatted"
+        valueExpr="id"
+        (onValueChanged)="loadCities($event.value)"
+        placeholder="Selecione um estado"
+    ></dx-select-box>
+    <br>
+
+    <p>Cidades</p>
+    <dx-select-box
+    width="50%"
+    [dataSource]="cidades"
+    [value]="idCidadeInicial"
+    valueExpr="id"
+    displayExpr="nome"
+    placeholder="Selecione uma cidade"
+    [searchEnabled]="true"
+    (onValueChanged)="selectCity($event.value)"
+    ></dx-select-box>
+</div>

@@ -1,0 +1,97 @@
+<div class="content-block">
+  <h2>Produtos</h2>
+
+  <!-- LISTAGEM -->
+  <dx-data-grid
+    #dataGrip
+    [dataSource]="produtos"
+    [showRowLines]="true"
+    [showBorders]="true"
+    (onSaved)="onSavedProduto($event)"
+    (onRowRemoving)="popupConfirmacaoDelete($event)"
+  >
+
+    <!-- COLUNAS DA LISTA -->
+    <dxi-column dataField="id"></dxi-column>
+    <dxi-column dataField="descricao"></dxi-column>
+    <dxi-column dataField="nome"></dxi-column>
+    <dxi-column dataField="preco"></dxi-column>
+
+    <!-- CONFIGURAÇÕES DA LISTA (ADIÇÃO, EDIÇÃO E REMOÇÃO) -->
+    <dxo-editing
+      mode="popup"
+      [allowUpdating]="true"
+      [allowDeleting]="true"
+      [confirmDelete]="false"
+      [texts]="{
+      saveRowChanges: 'Salvar',
+      cancelRowChanges: 'Cancelar'
+    }">
+
+      <dxo-popup title="Informações Produto" [showTitle]="true" width="60%" height="75%"></dxo-popup>
+      <dxo-form [colCount]="1">
+
+        <!-- ID -->
+        <dxi-item dataField="id" [disabled]="true" [editorOptions]="{ readOnly: true }"></dxi-item>
+
+        <!-- DESCRIÇÃO -->
+        <dxi-item dataField="descricao" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Descrição é obrigatória"></dxi-validation-rule>
+          <dxi-validation-rule type="stringLength" [min]="5" message="O nome deve ter pelo menos 5 símbolos"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- NOME -->
+        <dxi-item dataField="nome" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Nome é obrigatório"></dxi-validation-rule>
+          <dxi-validation-rule type="pattern" [pattern]="apenasStringPattern" message="Não use dígitos no Nome"></dxi-validation-rule>
+          <dxi-validation-rule type="stringLength" [min]="5" message="O nome deve ter pelo menos 5 símbolos"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- PRECO -->
+        <dxi-item dataField="preco" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Preço é obrigatório"></dxi-validation-rule>
+          <dxi-validation-rule type="pattern" [pattern]="apenasDigitosPattern" message="Use apenas dígitos"></dxi-validation-rule>
+        </dxi-item>
+      </dxo-form>
+
+    </dxo-editing>
+
+    <!-- OPÇÕES DAS PÁGINAS DA LISTA -->
+    <dxo-scrolling mode="standard"></dxo-scrolling>
+    <dxo-paging [enabled]="true" [pageSize]="5"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[5, 10, 20]"
+      [showInfo]="false"
+    ></dxo-pager>
+
+    <!-- PESQUISA E FILTRO -->
+    <dxo-search-panel [visible]="true" width="300"></dxo-search-panel>
+    <dxo-header-filter [visible]="false"></dxo-header-filter>
+
+  </dx-data-grid>
+
+  <!-- BOTÃO ADICIONAR -->
+  <dx-speed-dial-action
+    icon="add"
+    label="Adicionar"
+    (onClick)="addRow()"
+  ></dx-speed-dial-action>
+</div>
+
+<!-- POPUP CONFIRMAÇÃO DELETE -->
+<dx-popup
+  [visible]="popupDeleteVisivel"
+  [width]="500"
+  [height]="170"
+  [showTitle]="false"
+>
+  <p style="font-size: 18px">Você tem certeza que deseja excluir este item?</p>
+  <br>
+
+  <!-- BOTÕES DE CONFIRMAÇÃO E CANCELAMENTO -->
+  <div style="display: flex; justify-content: flex-end">
+    <dx-button text="Cancelar" (onClick)="cancelarDelete()"></dx-button>
+    <dx-button text="Deletar" type="default" (onClick)="onPressDeletar()"></dx-button>
+  </div>
+</dx-popup>

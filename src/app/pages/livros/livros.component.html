@@ -1,0 +1,113 @@
+<div class="content-block">
+  <h2>Livros</h2>
+
+  <!-- LISTAGEM -->
+  <dx-data-grid
+    #dataGrip
+    [dataSource]="livros"
+    [showRowLines]="true"
+    [showBorders]="true"
+    (onSaved)="onSavedLivro($event)"
+    (onRowRemoving)="popupConfirmacaoDelete($event)"
+  >
+
+    <!-- CONFIGURAÇÕES DA LISTA (ADIÇÃO, EDIÇÃO E REMOÇÃO) -->
+    <dxo-editing
+      mode="popup"
+      [allowUpdating]="true"
+      [allowDeleting]="true"
+      [confirmDelete]="false"
+      [texts]="{
+      saveRowChanges: 'Salvar',
+      cancelRowChanges: 'Cancelar'
+    }">
+
+      <dxo-popup title="Adicionar Livro" [showTitle]="true" width="60%" height="75%"></dxo-popup>
+      <dxo-form [colCount]="1">
+
+        <!-- ID -->
+        <dxi-item dataField="id" [disabled]="true" [visible]="false" [editorOptions]="{ readOnly: true }"></dxi-item>
+
+        <!-- TITULO -->
+        <dxi-item dataField="titulo" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Título é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- NOME AUTOR -->
+        <dxi-item dataField="nomeAutor" [editorOptions]="editorOptions">
+          <dxi-validation-rule type="required" message="Nome do Autor é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- GENERO -->
+        <dxi-item
+          dataField="genero"
+          [editorType]="'dxSelectBox'"
+          [editorOptions]="{ dataSource: generosList, searchEnabled: true }">
+          <dxi-validation-rule type="required" message="Gênero é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+        <!-- SINOPSE -->
+        <dxi-item dataField="sinopse" [height]="700" [editorType]="'dxTextArea'" [editorOptions]="{ height: 150, maxLength: 250 }">
+          <dxi-validation-rule type="required" message="Sinopse é obrigatório"></dxi-validation-rule>
+        </dxi-item>
+
+      </dxo-form>
+
+    </dxo-editing>
+
+    <!-- COLUNAS DA LISTA -->
+    <dxi-column dataField="id" width="5%" alignment="center"></dxi-column>
+    <dxi-column dataField="titulo"></dxi-column>
+    <dxi-column dataField="nomeAutor">
+      <dxo-lookup [dataSource]="autores" displayExpr="nome" valueExpr="nome"></dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="genero">
+      <dxo-lookup
+        [dataSource]="generosList"
+        [displayExpr]="''"
+        [valueExpr]="''">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="sinopse"></dxi-column>
+
+    <!-- OPÇÕES DAS PÁGINAS DA LISTA -->
+    <dxo-scrolling mode="standard"></dxo-scrolling>
+    <dxo-paging [enabled]="true" [pageSize]="5"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[5, 10, 20]"
+      [showInfo]="false"
+    ></dxo-pager>
+
+    <!-- PESQUISA E FILTRO -->
+    <dxo-search-panel [visible]="true" width="300"></dxo-search-panel>
+    <dxo-header-filter [visible]="false"></dxo-header-filter>
+
+  </dx-data-grid>
+
+  <!-- BOTÃO ADICIONAR -->
+  <dx-speed-dial-action
+    icon="add"
+    label="Adicionar"
+    (onClick)="addRow()"
+  ></dx-speed-dial-action>
+</div>
+
+<!-- POPUP CONFIRMAÇÃO DELETE -->
+<dx-popup
+  [visible]="popupDeleteVisivel"
+  [width]="500"
+  [height]="170"
+  [showTitle]="false"
+>
+  <p style="font-size: 18px">Você tem certeza que deseja excluir este item?</p>
+  <br>
+
+  <!-- BOTÕES DE CONFIRMAÇÃO E CANCELAMENTO -->
+  <div style="display: flex; justify-content: flex-end">
+    <dx-button text="Cancelar" (onClick)="cancelarDelete()"></dx-button>
+    <dx-button text="Deletar" type="default" (onClick)="onPressDeletar()"></dx-button>
+  </div>
+</dx-popup>
+
+
