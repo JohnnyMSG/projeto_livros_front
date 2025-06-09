@@ -19,7 +19,6 @@ const routes: Routes = [
   {
     path: 'tasks',
     component: TasksComponent,
-    canActivate: [ AuthGuardService ]
   },
   {
     path: 'profile',
